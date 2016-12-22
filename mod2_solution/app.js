@@ -27,8 +27,6 @@ function AlreadyBoughtController(ItemListService) {
   var bought = this
   bought.boughtMessage = true
 
-  console.log($watch.ItemListService.getBoughtList().length)
-
   bought.boughtList = ItemListService.getBoughtList()
 }
 

@@ -9,52 +9,67 @@ angular.module('ShoppingListCheckOff', [])
 ToBuyController.$inject = ["ItemListService"]
 function ToBuyController(ItemListService) {
   var buy = this
+  buy.buyMessage = false
+
+  buy.buyList = ItemListService.getBuyItem()
+
+  buy.removeBuyItem = function(itemIndex) {
+    ItemListService.buyToBoughtList(itemIndex)
+
+    if (ItemListService.getBuyItem().length === 0) {
+      buy.buyMessage = !buy.buyMessage
+    }
+  }
 }
 
 AlreadyBoughtController.$inject = ["ItemListService"]
 function AlreadyBoughtController(ItemListService) {
   var bought = this
+  bought.boughtMessage = true
+
+  console.log($watch.ItemListService.getBoughtList().length)
+
+  bought.boughtList = ItemListService.getBoughtList()
 }
 
 function ItemListService() {
   var service = this
 
   // List of shopping items
-  var buyItems = []
+  var buyItems = [
+                   {
+                     name: "cookies",
+                     quantity: 10
+                   },
+                   {
+                     name: "chips",
+                     quantity: 8
+                   },
+                   {
+                     name: "Pepsi",
+                     quantity: 4
+                   },
+                   {
+                     name: "bread",
+                     quantity: 5
+                   },
+                   {
+                     name: "coffee",
+                     quantity: 11
+                   }
+                 ]
   var boughtItems = []
 
-  // Adding items to array
-  service.addBuyItem = function(itemName, quantity) {
-    var item = {
-      name: itemName,
-      quantity: quantity
-    }
-    buyItems.push(item)
-  }
-
-  service.addBoughtItem = function(itemName, quantity) {
-    var item = {
-      name: itemName,
-      quantity: quantity
-    }
-    boughtItems.push(item)
-  }
-
-  // Removing items from array
-  service.removeBuyItem = function(itemIndex) {
+  service.buyToBoughtList = function(itemIndex) {
+    boughtItems.push(buyItems[itemIndex])
     buyItems.splice(itemIndex, 1)
   }
 
-  service.removeBoughtItem = function(itemIndex) {
-    boughtItems.splice(itemIndex, 1)
-  }
-
-  // Serve array of items
   service.getBuyItem = function() {
     return buyItems
   }
 
-  service.getBoughtItems = function() {
+  service.getBoughtList = function() {
     return boughtItems
   }
 }
